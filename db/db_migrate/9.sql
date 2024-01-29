@@ -1,0 +1,1 @@
+ALTER TABLE accounts ADD COLUMN IF NOT EXISTS x_name TEXT;

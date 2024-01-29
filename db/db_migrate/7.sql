@@ -1,0 +1,3 @@
+ALTER TABLE accounts ADD COLUMN IF NOT EXISTS institution TEXT;
+
+ALTER TABLE accounts ALTER COLUMN institution SET NOT NULL;

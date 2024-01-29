@@ -1,0 +1,89 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 16px;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  height: 100%;
+  width: 100%;
+  margin-top: 36px;
+  min-height: 100vh;
+}
+
+.dashboard {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+#footer {
+  margin-top: auto;
+}
+
+.card {
+  margin: 32px auto;
+  padding: 20px;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sub-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.category {
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.category h2 {
+  margin: 0;
+}
+
+.category p {
+  margin: 5px 0;
+}
+
+.t-muted {
+  color: #a9a9a9;
+}
+
+.account-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+
+}
+
+.account {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+  width: 100%;
+}
+
+.list-title {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.d-none {
+  display: none;
+}
+
+.active {
+  background-color: #f1f1f1;
+  display: block;
+}

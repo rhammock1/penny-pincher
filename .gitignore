@@ -1,0 +1,6 @@
+node_modules/
+web/enrollment/
+*.pem
+TODO.md
+bin/
+.DS_STORE

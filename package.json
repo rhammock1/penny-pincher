@@ -1,0 +1,18 @@
+{
+  "name": "budget",
+  "version": "0.1.0",
+  "description": "An app to track your finances while using as few external dependencies as possible.",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rhammock1 <rhamm1027@gmail.com> (https://smokeybear.dev)",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "pg": "^8.11.3"
+  }
+}
