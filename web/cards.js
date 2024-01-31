@@ -20,7 +20,6 @@ export default [
     request: '/ledger/overview?start_date={{start_date}}&end_date={{end_date}}',
     visible: true,
     graphs: null,
-    date_selector: true,
     component: 'ledger-overview',
   },
   {
@@ -32,7 +31,7 @@ export default [
   },
   {
     title: 'Spending by Category',
-    request: '/ledger/spending/category',
+    request: '/ledger/spending/category?start_date={{start_date}}&end_date={{end_date}}',
     visible: true,
     graphs: [
       { 
@@ -49,7 +48,6 @@ export default [
       //   format: data => Object.entries(data).map(([label, { total }]) => ({ label, value: total })),
       // },
     ],
-    date_selector: true,
     component: 'graph-carousel',
   },
   {
@@ -77,7 +75,6 @@ export default [
           .map(([label, { total }]) => ({ label, value: total })),
       },
     ],
-    date_selector: true,
     component: 'graph-carousel',
   },
   {
