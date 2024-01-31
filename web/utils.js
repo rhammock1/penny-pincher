@@ -29,7 +29,7 @@ export function getTemplateFromRequest(request_url) {
  * @param {object} body 
  * @returns response
  */
-export async function request(path, method = 'GET', body = {}) {
+export async function fetcher(path, method = 'GET', body = {}) {
   const response = await fetch(path, {
     method,
     headers: {
@@ -37,6 +37,10 @@ export async function request(path, method = 'GET', body = {}) {
     },
     body: method === 'GET' ? undefined : JSON.stringify(body),
   });
+  if(!response.ok) {
+    console.error(path, 'Request failed.', response);
+    return null;
+  }
   return response;
 }
 
