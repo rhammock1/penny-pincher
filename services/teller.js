@@ -40,12 +40,13 @@ const tellerRequest = async (endpoint, method, body = {}, x_access_token) => {
         })
         res.on('error', (err) => {
           console.error('Error in HTTP response', err);
-          throw err;
+          reject(err);
         })
       });
 
       req.on('error', (err) => {
         console.error('Error in HTTP request', err);
+        reject(err)
       });
   
       if (Object.keys(body).length) {
@@ -55,11 +56,15 @@ const tellerRequest = async (endpoint, method, body = {}, x_access_token) => {
   
       req.end();
     } catch(e) {
-      console.error('Error in tellerRequest', e)
+      console.error('Error making tellerRequest', e)
+      throw err;
     }
   });
 
-  const result = await promise;
+  const result = await promise.catch((err) => {
+    // console.error('Error in tellerRequest', err);
+    throw err;
+  });
 
   return result;
 }

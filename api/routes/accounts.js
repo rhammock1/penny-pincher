@@ -14,7 +14,7 @@ router.get('/balance', async (req, res) => {
 
     res.status(200).json({ data: accounts });
   } catch (e) {
-    console.error(e);
+    console.error('Failed to GET /balance', e);
     res.status(500).json({ error: e.message });
   }
 });

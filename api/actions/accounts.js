@@ -18,6 +18,6 @@ export const updateAccountBalances = async () => {
   try {
     await services.sync.balance(accounts_to_update);
   } catch(e) {
-    console.error(e);
+    console.error('Failed to update account balances', e);
   }
 };
