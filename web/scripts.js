@@ -1,6 +1,6 @@
 
 import cards from './cards.js';
-import { interpolate, request, formatTitleAsId } from './utils.js';
+import { interpolate, fetcher, formatTitleAsId } from './utils.js';
 
 class BudgetApp {
   state = {};
@@ -37,10 +37,21 @@ class BudgetApp {
       e.stopPropagation();
       e.preventDefault();
 
-      const success = await this.getCardsData(true);
-      success.forEach(({ response, card_id }) => {
-        this.setCardData(response, card_id);
-      });
+      for(const card of this.cards) {
+        if(!card.visible) {
+          return;
+        }
+        const el_id = `${card.component}-${formatTitleAsId(card.title)}`;
+        const el = document.getElementById(`${card.component}-${formatTitleAsId(card.title)}`);
+        el.input = {
+          ...card,
+          template_title: card.title,
+          title: interpolate(card.title, this.state),
+          id: el_id,
+        };
+        el.setAttribute('data-start-date', this.state.start_date);
+        el.setAttribute('data-end-date', this.state.end_date);
+      }
     });
 
     document.querySelector('app-wrapper').addEventListener('toggle-view', (e) => {
@@ -59,92 +70,27 @@ class BudgetApp {
       return;
     }
 
-    const successful_requests = await this.getCardsData();
-
     const dashboard = document.getElementById('dashboard');
-    for (const res of successful_requests) {
-      const {response, card_id} = res;
-      const card = this.cards.find(card => formatTitleAsId(card.title) === card_id);
-      const cardElement = document.createElement(card.component);
-      const title = interpolate(card.title, this.state);
-      cardElement.classList.add('card');
-      const element_id = `${card.component}-${formatTitleAsId(card.title)}`
-      cardElement.setAttribute('id', element_id);
-      
-      
-      cardElement.input = {
-        id: element_id,
-        data: response,
-        title,
+    for(const card of this.cards) {
+      if(!card.visible) {
+        return;
+      }
+
+      const card_el = document.createElement(card.component);
+      card_el.classList.add('card');
+      const el_id = `${card.component}-${formatTitleAsId(card.title)}`;
+      card_el.input = {
+        id: el_id,
         template_title: card.title,
-        graphs: card.graphs,
-      };
-
-      dashboard.appendChild(cardElement);
-    }
-  }
-
-  /**
-   * @description Gets data for all cards based on the cards request property and the current state.
-   * @param {boolean} date_change_only - If true, only cards that are affected by a date change will be updated.
-   * @returns {Promise<Array<{response: object, ok: boolean, card_id: string}>>} - An array of objects containing successful responses
-   */
-  async getCardsData(date_change_only = false) {
-    const requests = {};
-    let responses = [];
-    try {
-      for(const card of this.cards) {
-        if(!card.visible) {
-          // Skip hidden cards
-          continue;
-        }
-        requests[formatTitleAsId(card.title)] = interpolate(card.request, this.state);
+        title: interpolate(card.title, this.state),
+        ...card,
       }
+      card_el.setAttribute('id', el_id);
+      card_el.setAttribute('data-start-date', this.state.start_date);
+      card_el.setAttribute('data-end-date', this.state.end_date);
 
-      responses = await Promise.all(Object.keys(requests).map(async (key) => {
-        const response = await request(requests[key]);
-        if(!response.ok) {
-          console.error(`[${requests[key]}] Error fetching data:`, response);
-          return {
-            response: [],
-            ok: false,
-            card_id: key,
-          };
-        }
-        const {data} = await response.json();
-        return {
-          response: data,
-          ok: response.ok,
-          card_id: key,
-        };
-      }));
-
-      const erroredRequests = responses.filter(res => !res.ok);
-      if (erroredRequests.length) {
-        console.error('Error fetching data:', JSON.stringify(erroredRequests));
-      }
-
-    } catch (e) {
-      console.error('Error parsing data:', e);
+      dashboard.appendChild(card_el);
     }
-
-    return responses.filter(res => res.ok);
-  }
-
-  setCardData(data, card_id) {
-    const card = this.cards.find(card => formatTitleAsId(card.title) === card_id);
-
-    const cardElement = document.getElementById(`${card.component}-${card_id}`);
-    if(card.date_selector) {;
-      cardElement.setAttribute('data-start-date', this.state.start_date);
-      cardElement.setAttribute('data-end-date', this.state.end_date);
-    }
-  
-    cardElement.input = {
-      data: typeof card.format === 'function' ? card.format(data) : data,
-      title: interpolate(card.title, this.state),
-      template_title: card.title,
-    };
   }
 
   async toggleView() {
@@ -164,37 +110,21 @@ class BudgetApp {
       this.init();
     } else if(view === 'classify') {
       const classify_card = this.cards.find(card => card.title === 'Classify Transactions');
-      const response = await request(classify_card.request);
-      if (!response.ok) {
-        console.error(`[${classify_card.request}] Error fetching data:`, response);
-        return;
-      }
-      const { data } = await response.json();
       const classify = document.createElement(classify_card.component);
       classify.input = {
         title: classify_card.title,
-        classifier_types: data?.classifier_types,
-        unknown_transactions: data?.unknown_transactions,
+        request: classify_card.request,
         post_url: classify_card.request,
       };
 
       dashboard.appendChild(classify);
     } else if(view === 'connect') {
       const connect_card = this.cards.find(card => card.title === 'Connect Accounts');
-      console.log('CONNECT CARD', connect_card);
       const connect = document.createElement(connect_card.component);
-      const response = await request(connect_card.request);
-      if (!response.ok) {
-        console.error(`[${connect_card.request}] Error fetching data:`, response);
-        return;
-      }
-      const { data } = await response.json();
       connect.input = {
         title: connect_card.title,
-        data,
+        request: connect_card.request,
       };
-
-      console.log('CONNECT', connect, data);
 
       dashboard.appendChild(connect);
     }

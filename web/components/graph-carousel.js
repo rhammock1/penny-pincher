@@ -1,4 +1,4 @@
-import { interpolate, formatTitleAsId } from "../utils.js";
+import { interpolate, fetcher, formatTitleAsId } from "../utils.js";
 
 export default class GraphCarousel extends HTMLElement {
   static observedAttributes = ['data-start-date', 'data-end-date'];
@@ -22,37 +22,26 @@ export default class GraphCarousel extends HTMLElement {
     } else if(name === 'data-end-date') {
       this.end_date = newValue;
     }
-
     
-    const {template_title, graphs, data, id} = this.input;
+    const {template_title, graphs, request, id} = this.input;
+
     this.updateInnerHtml(interpolate(template_title, {
       start_date: this.start_date,
       end_date: this.end_date,
     }), template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
-    this.setDynamicElements(template_title, graphs, data, id);
+
+    fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
+      .then(res => res.json())
+      .then(({data}) => this.setDynamicElements(template_title, graphs, data, id));
   }
 
   updateInnerHtml(title, template_title, should_show_buttons = false) {
     const id = formatTitleAsId(template_title);
-    
-    let prev_button;
-    let next_button;
 
-    if(document.getElementById(`prev-button-${id}`)) {
-      prev_button = document.getElementById(`prev-button-${id}`);
-    } else {
-      prev_button = document.createElement('button');
-      prev_button.setAttribute('id', `prev-button-${id}`);
-      prev_button.innerHTML = 'Previous';
-    }
-
-    if(document.getElementById(`next-button-${id}`)) {
-      next_button = document.getElementById(`next-button-${id}`);
-    } else {
-      next_button = document.createElement('button');
-      next_button.setAttribute('id', `next-button-${id}`);
-      next_button.innerHTML = 'Next';
-    }
+    const buttons = `
+      <button id="prev-button-${id}">Previous</button>
+      <button id="next-button-${id}">Next</button>
+    `;
 
     this.innerHTML = `
       <h1>${title}</h1>
@@ -60,14 +49,9 @@ export default class GraphCarousel extends HTMLElement {
         <div id="carousel-inner-${id}" class="carousel-inner">
         
         </div>
+        ${should_show_buttons ? buttons : ''}
       </div>
     `;
-
-    const carousel = document.getElementById(`carousel-${id}`);
-    if(should_show_buttons) {
-      carousel.appendChild(prev_button);
-      carousel.appendChild(next_button);
-    }
   }
 
   setDynamicElements(template_title, graphs, data, id) {
@@ -79,20 +63,28 @@ export default class GraphCarousel extends HTMLElement {
         continue;
       }
 
-      const graph_el = document.createElement(this.graphs[graph.type]);
+      // Check for existing graph el
+      const existing_graph = document.getElementById(`${graph.type}-${id}-${index}`);
+      const graph_el = existing_graph
+        ? existing_graph
+        : document.createElement(this.graphs[graph.type]);
+
       graph_el.setAttribute('id', `${graph.type}-${id}-${index}`);
 
       // Create a child canvas element
-      if(graph.type !== 'table') {
-        // No need for a canvas here
-        const canvas = document.createElement('canvas');
-        canvas.setAttribute('width', graph.canvas_width);
-        canvas.setAttribute('height', graph.canvas_height);
-        canvas.setAttribute('id', `${graph.type}-${id}-canvas-${index}`);
-        graph_el.appendChild(canvas);
+      if (graph.type !== 'table') {
+        // Check if a canvas already exists
+        const el_id = `${graph.type}-${id}-canvas-${index}`;
+        const existing_canvas = document.getElementById(el_id);
+        if (!existing_canvas) {
+          const canvas = document.createElement('canvas');
+          canvas.setAttribute('width', graph.canvas_width);
+          canvas.setAttribute('height', graph.canvas_height);
+          canvas.setAttribute('id', el_id);
+          graph_el.appendChild(canvas);
+        }
       }
 
-      console.log('DATA', data, graph.type);
       const formatted_data = graph.format(data);
       graph_el.input = {
         canvas_id: `${graph.type}-${id}-canvas-${index}`,
@@ -103,16 +95,19 @@ export default class GraphCarousel extends HTMLElement {
         columns: graph.columns,
       };
 
-      const carouselItem = document.createElement('div');
-      carouselItem.classList.add('carousel-item');
-      if(index === 0) {
-        carouselItem.classList.add('active');
-      } else {
-        carouselItem.classList.add('d-none');
-      }
-      carouselItem.appendChild(graph_el);
+      // If the graph already exists, then the carousel item has also already been created
+      if(!existing_graph) {
+        const carouselItem = document.createElement('div');
+        carouselItem.classList.add('carousel-item');
+        if (index === 0) {
+          carouselItem.classList.add('active');
+        } else {
+          carouselItem.classList.add('d-none');
+        }
+        carouselItem.appendChild(graph_el);
 
-      carousel_inner.appendChild(carouselItem);
+        carousel_inner.appendChild(carouselItem);
+      }
       index++;
     }
   }
@@ -122,16 +117,46 @@ export default class GraphCarousel extends HTMLElement {
       title,
       template_title,
       graphs,
-      data,
+      request,
       id,
     } = this.input;
 
     this.start_date = this.getAttribute('data-start-date');
     this.end_date = this.getAttribute('data-end-date');
-
+    
     this.updateInnerHtml(title, template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
+    fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
+      .then(res => res.json())
+      .then(({ data }) => {
+        this.setDynamicElements(template_title, graphs, data, id);
+        if (graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1) {
+          const prev_button = document.getElementById(`prev-button-${title_id}`);
+          const next_button = document.getElementById(`next-button-${title_id}`);
+          next_button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
 
-    this.setDynamicElements(template_title, graphs, data, id);
+            carousel.next();
+          });
+
+          prev_button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            e.preventDefault();
+
+            carousel.prev();
+          });
+
+          const carousel_inner = document.getElementById(`carousel-inner-${title_id}`);
+          // Don't show the previous button if we're on the first slide
+          if (!carousel_inner.querySelector('.active').previousElementSibling) {
+            prev_button.classList.add('d-none');
+          }
+          // Don't show the next button if we're on the last slide
+          if (!carousel_inner.querySelector('.active').nextElementSibling) {
+            next_button.classList.add('d-none');
+          }
+        }
+      });
 
     const title_id = formatTitleAsId(template_title);
     const carousel = document.getElementById(`carousel-${title_id}`);
@@ -171,37 +196,8 @@ export default class GraphCarousel extends HTMLElement {
           document.getElementById(`next-button-${title_id}`).classList.add('d-none');
         }
         document.getElementById(`prev-button-${title_id}`).classList.remove('d-none');
-
       }
     };
-
-    if(graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1) {
-      const prev_button = document.getElementById(`prev-button-${title_id}`);
-      const next_button = document.getElementById(`next-button-${title_id}`);
-      next_button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        carousel.next();
-      });
-
-      prev_button.addEventListener('click', (e) => {
-        e.stopPropagation();
-        e.preventDefault();
-
-        carousel.prev();
-      });
-
-      const carousel_inner = document.getElementById(`carousel-inner-${title_id}`);
-      // Don't show the previous button if we're on the first slide
-      if(!carousel_inner.querySelector('.active').previousElementSibling) {
-        prev_button.classList.add('d-none');
-      }
-      // Don't show the next button if we're on the last slide
-      if(!carousel_inner.querySelector('.active').nextElementSibling) {
-        next_button.classList.add('d-none');
-      }
-    }
   }
 }
 

@@ -34,8 +34,6 @@ export default class LineChart extends HTMLElement {
       const mouseX = event.clientX - canvas.getBoundingClientRect().left;
       const closestIndex = getClosestDataPointIndex(width, mouseX, this.input.data.length);
 
-      console.log('CLOSEST INDEX: ', closestIndex, data);
-
       // Clear the previous hover effect
       context.clearRect(0, 0, width, height);
 

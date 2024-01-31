@@ -1,12 +1,12 @@
+import { fetcher } from "../utils.js";
+
 export default class ServiceEnrollment extends HTMLElement {
   constructor() {
     super();
-    console.log('constructor');
   }
 
   connectedCallback() {
-    console.log('connectedCallback');
-    const { title, data: available_services } = this.input;
+    const { title, request } = this.input;
     this.innerHTML = `
       <div class="card">
         <h1>${title}</h1>
@@ -15,8 +15,14 @@ export default class ServiceEnrollment extends HTMLElement {
       </div>
     `;
 
+    fetcher(request)
+      .then(res => res.json())
+      .then(({data}) => this.generateEnrollmentCard(data));
+  }
+
+  generateEnrollmentCard(available_services) {
     const services_list = document.querySelector('#available-services-body');
-    for(const service of available_services) {
+    for (const service of available_services) {
 
       const service_item = document.createElement('div');
       service_item.id = `${service}-item`;

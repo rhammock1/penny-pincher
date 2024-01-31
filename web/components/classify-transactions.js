@@ -1,12 +1,12 @@
-import {request} from '../utils.js';
+import { fetcher } from '../utils.js';
 
 export default class ClassifyTransactions extends HTMLElement {
   constructor() {
     super();
   }
 
-  connectedCallback() {
-    const {title, classifier_types, unknown_transactions } = this.input;
+  async connectedCallback() {
+    const {title, request } = this.input;
     this.innerHTML = `
       <div class="card">
         <h1>${title}</h1>
@@ -14,6 +14,11 @@ export default class ClassifyTransactions extends HTMLElement {
         </div>
       </div>
     `;
+
+    const response = await fetcher(request);
+
+    const { data } = await response?.json() || {};
+    const {unknown_transactions, classifier_types} = data;
 
     const table = document.createElement('table-chart');
     table.input = {
@@ -73,7 +78,7 @@ export default class ClassifyTransactions extends HTMLElement {
       console.log('No new classifiers to submit');
       return;
     }
-    const response = await request(this.input.post_url, 'POST', { classifiers_to_insert: Object.values(classifiers_to_insert) });
+    const response = await fetcher(this.input.post_url, 'POST', { classifiers_to_insert: Object.values(classifiers_to_insert) });
     if (!response.ok) {
       console.error('Failed to classify transaction');
     }

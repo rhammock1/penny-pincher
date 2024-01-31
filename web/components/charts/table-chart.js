@@ -1,4 +1,4 @@
-import {request, formatTitleAsId} from '../../utils.js';
+import {formatTitleAsId} from '../../utils.js';
 
 export default class TableChart extends HTMLElement {
   edited_cells = {};
@@ -24,7 +24,6 @@ export default class TableChart extends HTMLElement {
   }
 
   connectedCallback() {
-    console.log('input', this.input);
     this.editable_columns = this.input.editable_columns || {};
     this.columns = this.input.columns;
     this.title = this.input.title;
@@ -60,8 +59,6 @@ export default class TableChart extends HTMLElement {
 
   renderTable() {
     const { paginated_data, columns, editable_columns, title } = this;
-
-    console.log('DATA IN TABLE', paginated_data);
 
     const is_editable = Object.keys(editable_columns).length;
 
@@ -120,7 +117,6 @@ export default class TableChart extends HTMLElement {
   setPagination() {
     // Should append the pagination buttons to the table-body element
     this.total_pages = Math.ceil(this.data.length / this.page_size);
-    console.log('TOTAL PAGES: ', this.total_pages);
     const id = formatTitleAsId(this.title);
     if(!this.querySelector(`#prev-page-${id}`) && !this.querySelector(`#next-page-${id}`)) {
       const pagination = document.createElement('div');

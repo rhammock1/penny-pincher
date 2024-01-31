@@ -1,16 +1,20 @@
-import { formatTitleAsId, currency } from "../utils.js";
+import { formatTitleAsId, fetcher, currency } from "../utils.js";
 
 export default class AccountBalances extends HTMLElement {
   constructor() {
     super();
   }
 
-  connectedCallback() {
-    const {title, data} = this.input;
+  async connectedCallback() {
+    const {title, request} = this.input;
+
+    const response = await fetcher(request);
+
+    const { data } = await response?.json() || {};
 
     this.innerHTML = `
       <h1 id=${formatTitleAsId(title)}>${title}</h1>
-      ${this.renderAccountBalances(data, currency).outerHTML}
+      ${data.length ? this.renderAccountBalances(data, currency).outerHTML : '<no-data></no-data>'}
     `;
   }
 

@@ -1,4 +1,4 @@
-import { interpolate, currency } from "../utils.js";
+import { interpolate, fetcher, currency } from "../utils.js";
 
 export default class LedgerOverview extends HTMLElement {
   static observedAttributes = ['data-start-date', 'data-end-date'];
@@ -10,13 +10,17 @@ export default class LedgerOverview extends HTMLElement {
     super();
   }
 
-  async connectedCallback() {
-    const {title, data} = this.input;
+  connectedCallback() {
+    const {title, request} = this.input;
 
     this.start_date = this.getAttribute('data-start-date');
     this.end_date = this.getAttribute('data-end-date');
 
-    this.setInnerHtml(title, data);
+    const dates = { start_date: this.start_date, end_date: this.end_date }
+
+    fetcher(interpolate(request, dates))
+      .then((res) => !!res ? res.json() : {})
+      .then(({data}) => this.setInnerHtml(interpolate(title, dates), data));
   }
 
   attributeChangedCallback(name, oldValue, newValue) {
@@ -26,17 +30,22 @@ export default class LedgerOverview extends HTMLElement {
       this.end_date = newValue;
     }
 
-    const { template_title, data } = this.input;
-    this.setInnerHtml(interpolate(template_title, {
-      start_date: this.start_date,
-      end_date: this.end_date,
-    }), data);
+    const { template_title, request } = this.input || {};
+    fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
+      .then((res) => !!res ? res.json() : {})
+      .then(({ data }) => this.setInnerHtml(
+        interpolate(template_title, {
+          start_date: this.start_date,
+          end_date: this.end_date,
+        }), 
+        data,
+      ));
   }
 
   setInnerHtml(title, data) {  
     this.innerHTML = `
       <h1>${title}</h1>
-      ${this.createCategoryElement(data, currency).outerHTML}
+      ${Object.keys(data).length ? this.createCategoryElement(data, currency).outerHTML : '<no-data></no-data>'}
     `;
   }
 
