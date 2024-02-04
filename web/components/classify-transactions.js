@@ -15,36 +15,37 @@ export default class ClassifyTransactions extends HTMLElement {
       </div>
     `;
 
-    const response = await fetcher(request);
+    fetcher(request)
+      .then((res) => res.json())
+      .then(({data}) => {
+        const { unknown_transactions, classifier_types } = data;
 
-    const { data } = await response?.json() || {};
-    const {unknown_transactions, classifier_types} = data;
-
-    const table = document.createElement('table-chart');
-    table.input = {
-      data: unknown_transactions,
-      title: 'Unknown Transactions',
-      columns: {
-        description: 'Description',
-        classifier_type: 'classifier Type',
-        classifier: 'Classifier',
-        classifier_descriptor: 'Classifier Descriptor',
-      },
-      editable_columns: {
-        classifier_type: {
-          type: 'select',
-          options: classifier_types,
-        },
-        classifier: {
-          type: 'text',
-        },
-        classifier_descriptor: {
-          type: 'text',
-        },
-      },
-      onSubmit: this.onSubmit.bind(this),
-    };
-    this.querySelector('#classify-body').appendChild(table);
+        const table = document.createElement('table-chart');
+        table.input = {
+          data: unknown_transactions,
+          title: 'Unknown Transactions',
+          columns: {
+            description: 'Description',
+            classifier_type: 'classifier Type',
+            classifier: 'Classifier',
+            classifier_descriptor: 'Classifier Descriptor',
+          },
+          editable_columns: {
+            classifier_type: {
+              type: 'select',
+              options: classifier_types,
+            },
+            classifier: {
+              type: 'text',
+            },
+            classifier_descriptor: {
+              type: 'text',
+            },
+          },
+          onSubmit: this.onSubmit.bind(this),
+        };
+        this.querySelector('#classify-body').appendChild(table);
+      });
   }
 
   async onSubmit (event, edited_cells) {
