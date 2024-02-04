@@ -38,6 +38,7 @@ export default class AppWrapper extends HTMLElement {
       <div class="header">
         <div class="header_title" id="home-button">Budget</div>
         <div class="header_menu">
+          <div class="header_menu_item" id="goals-button">Financial Goals</div>
           <div class="header_menu_item" id="connect-button">Connect Services</div>
           <div class="header_menu_item" id="classify-button">Classify</div>
           <!-- <div class="header_menu_item" id="upload-button">Upload Transactions</div> -->
@@ -53,6 +54,7 @@ export default class AppWrapper extends HTMLElement {
     this.shadowRoot.getElementById('classify-button')?.addEventListener('click', (e) => this.toggleView(e, 'classify'));
     this.shadowRoot.getElementById('connect-button')?.addEventListener('click', (e) => this.toggleView(e, 'connect'));
     this.shadowRoot.getElementById('home-button')?.addEventListener('click', (e) => this.toggleView(e, 'home'));
+    this.shadowRoot.getElementById('goals-button')?.addEventListener('click', (e) => this.toggleView(e, 'goals'));
   }
 
   toggleView(e, view) {

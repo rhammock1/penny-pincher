@@ -100,12 +100,21 @@ export default [
     title: 'Classify Transactions',
     request: '/ledger/classify',
     visible: false, // Hide this card by default
+    view: 'classify',
     component: 'classify-transactions',
   },
   {
     title: 'Connect Accounts',
     request: '/services/available',
     visible:  false, // Hide this card by default
+    view: 'connect',
     component: 'service-enrollment',
-  }
+  },
+  {
+    title: 'Financial Goals',
+    request: '/goals',
+    visible: false, // Hide this card by default
+    view: 'goals',
+    component: 'financial-goals',
+  },
 ];
