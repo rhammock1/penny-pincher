@@ -1,10 +1,13 @@
 export default class NoData extends HTMLElement {
   constructor() {
     super();
-  }
 
-  connectedCallback() {
-    this.innerHTML = '<div>No data</div>';
+    this.attachShadow({ mode: 'open' });
+    this.shadowRoot.innerHTML = `
+      <div class="no-data">
+        <slot>No Data</slot>
+      </div>
+    `;
   }
 }
 
