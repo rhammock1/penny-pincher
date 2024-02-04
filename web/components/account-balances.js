@@ -5,13 +5,18 @@ export default class AccountBalances extends HTMLElement {
     super();
   }
 
-  async connectedCallback() {
+  connectedCallback() {
     const {title, request} = this.input;
 
-    const response = await fetcher(request);
+    fetcher(request)
+      .then(res => res.json())
+      .then(({data}) => this.updateInnerHTML(title, data));
 
-    const { data } = await response?.json() || {};
+    // Make sure the title at least renders
+    this.updateInnerHTML(title, []);
+  }
 
+  updateInnerHTML(title, data) {
     this.innerHTML = `
       <h1 id=${formatTitleAsId(title)}>${title}</h1>
       ${data.length ? this.renderAccountBalances(data, currency).outerHTML : '<no-data></no-data>'}
