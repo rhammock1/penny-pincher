@@ -12,7 +12,7 @@ INSERT INTO ledger (
 FROM jsonb_to_recordset(${transactions}) AS x(
   description TEXT,
   amount BIGINT,
-  fiscal_day TEXT,
+  fiscal_day DATE,
   x_account_id TEXT,
   x_transaction_id TEXT
 ) ON CONFLICT(x_transaction_id) DO NOTHING;
