@@ -55,6 +55,10 @@ class BudgetApp {
     });
 
     document.querySelector('app-wrapper').addEventListener('toggle-view', (e) => {
+      if(this.state.view === e.detail.view) {
+        // Don't do anything if we're already on the view
+        return;
+      }
       this.state.view = e.detail.view;
       this.toggleView();
     });
