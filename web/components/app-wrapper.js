@@ -1,9 +1,7 @@
 export default class AppWrapper extends HTMLElement {
   constructor() {
     super();
-  }
 
-  connectedCallback() {
     // Shadow dom
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
@@ -46,15 +44,23 @@ export default class AppWrapper extends HTMLElement {
       </div>
       <slot></slot>
       <footer id="footer">
+        &copy; ${new Date().getFullYear()} smokeybear.dev
       </footer>
     `;
+  }
 
-    this.shadowRoot.getElementById('footer').innerHTML = `&copy; ${new Date().getFullYear()} smokeybear.dev`;
-
+  connectedCallback() {
     this.shadowRoot.getElementById('classify-button')?.addEventListener('click', (e) => this.toggleView(e, 'classify'));
     this.shadowRoot.getElementById('connect-button')?.addEventListener('click', (e) => this.toggleView(e, 'connect'));
     this.shadowRoot.getElementById('home-button')?.addEventListener('click', (e) => this.toggleView(e, 'home'));
     this.shadowRoot.getElementById('goals-button')?.addEventListener('click', (e) => this.toggleView(e, 'goals'));
+  }
+
+  disconnectedCallback() {
+    this.shadowRoot.getElementById('classify-button')?.removeEventListener('click', this.toggleView);
+    this.shadowRoot.getElementById('connect-button')?.removeEventListener('click', this.toggleView);
+    this.shadowRoot.getElementById('home-button')?.removeEventListener('click', this.toggleView);
+    this.shadowRoot.getElementById('goals-button')?.removeEventListener('click', this.toggleView);
   }
 
   toggleView(e, view) {
