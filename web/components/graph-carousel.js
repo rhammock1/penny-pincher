@@ -22,8 +22,12 @@ export default class GraphCarousel extends HTMLElement {
     } else if(name === 'data-end-date') {
       this.end_date = newValue;
     }
-    
+
     const {template_title, graphs, request, id} = this.input;
+
+    if(this.start_date == null || this.end_date == null) {
+      return;
+    }
 
     this.updateInnerHtml(interpolate(template_title, {
       start_date: this.start_date,

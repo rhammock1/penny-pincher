@@ -30,6 +30,10 @@ export default class LedgerOverview extends HTMLElement {
       this.end_date = newValue;
     }
 
+    if(this.start_date == null || this.end_date == null) {
+      return;
+    }
+
     const { template_title, request } = this.input || {};
     fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
       .then((res) => !!res ? res.json() : {})
