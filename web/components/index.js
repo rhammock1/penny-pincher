@@ -12,6 +12,7 @@ import TableChart from "./charts/table-chart.js";
 import AppWrapper from "./app-wrapper.js";
 import ClassifyTransactions from "./classify-transactions.js";
 import ServiceEnrollment from "./service-enrollment.js";
+import FinancialGoals from "./financial-goals.js";
 import NoData from "./no-data.js";
 
 // Export isn't necessary, but I don't like the unused variable warning
