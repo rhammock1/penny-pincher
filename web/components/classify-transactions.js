@@ -78,7 +78,7 @@ export default class ClassifyTransactions extends HTMLElement {
       console.log('No new classifiers to submit');
       return;
     }
-    const response = await fetcher(this.input.post_url, 'POST', { classifiers_to_insert: Object.values(classifiers_to_insert) });
+    const response = await fetcher(this.input.request, 'POST', { classifiers_to_insert: Object.values(classifiers_to_insert) });
     if (!response.ok) {
       console.error('Failed to classify transaction');
     }

@@ -108,25 +108,14 @@ class BudgetApp {
 
     if(view === 'home') {
       this.init();
-    } else if(view === 'classify') {
-      const classify_card = this.cards.find(card => card.title === 'Classify Transactions');
-      const classify = document.createElement(classify_card.component);
-      classify.input = {
-        title: classify_card.title,
-        request: classify_card.request,
-        post_url: classify_card.request,
+    } else if(view === 'classify' || view === 'connect' || view === 'goals') {
+      const card = this.cards.find(card => card.view === view);
+      const card_el = document.createElement(card.component);
+      card_el.input = {
+        title: card.title,
+        request: card.request,
       };
-
-      dashboard.appendChild(classify);
-    } else if(view === 'connect') {
-      const connect_card = this.cards.find(card => card.title === 'Connect Accounts');
-      const connect = document.createElement(connect_card.component);
-      connect.input = {
-        title: connect_card.title,
-        request: connect_card.request,
-      };
-
-      dashboard.appendChild(connect);
+      dashboard.appendChild(card_el);
     }
   }
 }
