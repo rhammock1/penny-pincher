@@ -8,6 +8,6 @@ INSERT INTO ledger (
 FROM jsonb_to_recordset(${ledger_json}) AS x(
   description TEXT,
   amount BIGINT,
-  fiscal_day DATE
+  fiscal_day TEXT
 );
 
