@@ -1,4 +1,4 @@
-import { fetcher } from '../utils.js';
+import { fetcher } from '../../utils.js';
 
 export default class ClassifyTransactions extends HTMLElement {
   constructor() {

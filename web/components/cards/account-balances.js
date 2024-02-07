@@ -1,4 +1,4 @@
-import { formatTitleAsId, fetcher, currency } from "../utils.js";
+import { formatTitleAsId, fetcher, currency } from "../../utils.js";
 
 export default class AccountBalances extends HTMLElement {
   constructor() {

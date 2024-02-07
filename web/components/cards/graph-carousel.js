@@ -1,4 +1,4 @@
-import { interpolate, fetcher, formatTitleAsId } from "../utils.js";
+import { interpolate, fetcher, formatTitleAsId } from "../../utils.js";
 
 export default class GraphCarousel extends HTMLElement {
   static observedAttributes = ['data-start-date', 'data-end-date'];

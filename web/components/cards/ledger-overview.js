@@ -1,4 +1,4 @@
-import { interpolate, fetcher, currency } from "../utils.js";
+import { interpolate, fetcher, currency } from "../../utils.js";
 
 export default class LedgerOverview extends HTMLElement {
   static observedAttributes = ['data-start-date', 'data-end-date'];
