@@ -1,5 +1,5 @@
 export function interpolate(str, state) {
-  return str.replace(/\{\{([^}]+)\}\}/g, (m, key) => Object.keys(state).includes(key) ? state[key] : m);
+  return str.replace(/\{\{([^}]+)\}\}/g, (m, key) => (Object.keys(state).includes(key) ? state[key] : m));
 }
 
 export function getTemplateFromRequest(request_url) {
