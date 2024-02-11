@@ -31,7 +31,6 @@ export default class AppWrapper extends HTMLElement {
           display: flex;
           width: 100%;
           justify-content: center;
-          flex-shrink: 0;
         }
       </style>
       <div class="header">
