@@ -15,6 +15,19 @@ class BudgetApp {
       view: 'home',
     };
 
+    const app_body = document.getElementById('app-body');
+    // prepend a div to the app-body to hold the date picker
+    const date_picker = document.createElement('div');
+    date_picker.classList.add('date-container');
+    date_picker.innerHTML = `
+      <label for="start_date">Start Date:</label>
+      <input type="date" id="start-date-pick" name="start_date">
+      <label for="end_date">End Date:</label>
+      <input type="date" id="end-date-pick" name="end_date">
+      <button id="date-submit">Submit</button>
+    `;
+    app_body.prepend(date_picker);
+
     const start_date = document.getElementById('start-date-pick');
     const end_date = document.getElementById('end-date-pick');
 
@@ -111,8 +124,11 @@ class BudgetApp {
     dashboard.innerHTML = '';
 
     if(view === 'home') {
+      document.querySelector('.date-container').style.display = 'block';
       this.init();
     } else if(view === 'classify' || view === 'connect' || view === 'goals') {
+      // Hide the date picker
+      document.querySelector('.date-container').style.display = 'none';
       const card = this.cards.find(card => card.view === view);
       const card_el = document.createElement(card.component);
       card_el.input = {
