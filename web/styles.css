@@ -2,7 +2,8 @@ body {
   font-family: Arial, sans-serif;
   margin: 16px;
   padding: 0;
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .container {
@@ -18,14 +19,17 @@ body {
 .dashboard {
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
 }
 
-#footer {
-  margin-top: auto;
+#app-wrapper {
+  height: 90vh;
+}
+
+#app-body {
+  height: 100%;
 }
 
 .card {
