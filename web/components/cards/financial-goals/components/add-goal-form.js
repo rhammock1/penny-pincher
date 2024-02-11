@@ -44,7 +44,9 @@ export class AddGoalForm extends HTMLElement {
   }
 
   handleCancel(e) {
-    this.dispatchEvent(new CustomEvent('cancel-add-goal'));
+    e.preventDefault();
+    e.stopPropagation();
+    this.dispatchEvent(new CustomEvent('cancel-add-goal', {detail: 'cancel'}));
   }
 
   async handleSubmit(e) {
