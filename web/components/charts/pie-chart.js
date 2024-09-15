@@ -21,9 +21,11 @@ export default class PieChart extends HTMLElement {
         datasets: [{data: values}]
       },
       options: {
-        title: {
-          display: true,
-          value: title,
+        plugins: {
+          title: {
+            display: true,
+            text: title,
+          },
         },
       },
     });

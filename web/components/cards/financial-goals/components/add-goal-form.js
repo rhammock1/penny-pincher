@@ -8,31 +8,32 @@ export class AddGoalForm extends HTMLElement {
   connectedCallback() {
     const {goal_types} = this.input;
 
+    console.log('goal types', goal_types);
     this.innerHTML = `
-      <form id="add-goal-form">
+      <form class="m-2" id="add-goal-form">
         <div class="form-group">
           <label for="goal-name">Goal Name</label>
-          <input type="text" id="goal-name" name="name" required>
+          <input class="form-control" type="text" id="goal-name" name="name" required>
           <label for="short-name">Short Name</label>
-          <input type="text" id="short-name" name="short_name" required>
+          <input class="form-control" type="text" id="short-name" name="short_name" required>
         </div>
         <div class="form-group">
           <label for="goal-amount">Goal Amount</label>
-          <input type="number" id="goal-amount" name="goal_amount" required>
+          <input class="form-control" type="number" id="goal-amount" name="goal_amount" required>
         </div>
         <div class="form-group">
           <label for="target-date">Goal Date</label>
-          <input type="date" id="target-date" name="target_date">
+          <input class="form-control" type="date" id="target-date" name="target_date">
         </div>
         <div class="form-group">
           <label for="goal-type">Goal Type</label>
-          <select id="goal-type" name="goal_type">
+          <select class="form-control" id="goal-type" name="goal_type">
             <option value="">Select a goal type</option>
-            ${goal_types?.map((type) => `<option value="${type}">${type}</option>`).join('')}
+            ${goal_types?.map(({classifier_type: type}) => `<option value="${type}">${type}</option>`).join('')}
           </select>
         </div>
-        <button id="cancel-add-goal" type="button">Cancel</button>
-        <button id="submit-add-goal" type="submit">Submit</button>
+        <button class="btn btn-secondary" id="cancel-add-goal" type="button">Cancel</button>
+        <button class="btn btn-primary" id="submit-add-goal" type="submit">Submit</button>
       </form>
     `;
 

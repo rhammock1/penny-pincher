@@ -19,7 +19,7 @@ class BudgetApp {
     // prepend a div to the app-body to hold the date picker
     const date_picker = document.createElement('div');
     date_picker.setAttribute('id', 'date-picker');
-    date_picker.classList.add('d-flex');
+    date_picker.classList.add('d-flex', 'mb-3');
     date_picker.innerHTML = `
       <div class="d-flex col-12">
         <div class="d-flex col-8">

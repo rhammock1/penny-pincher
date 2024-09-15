@@ -29,17 +29,14 @@ export default class GraphCarousel extends HTMLElement {
       return;
     }
 
-    this.updateInnerHtml(interpolate(template_title, {
-      start_date: this.start_date,
-      end_date: this.end_date,
-    }), template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
+    this.updateInnerHtml(template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
 
     fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
       .then(res => res.json())
       .then(({data}) => this.setDynamicElements(template_title, graphs, data, id));
   }
 
-  updateInnerHtml(title, template_title, should_show_buttons = false) {
+  updateInnerHtml(template_title, should_show_buttons = false) {
     const id = formatTitleAsId(template_title);
 
     const buttons = `
@@ -98,7 +95,10 @@ export default class GraphCarousel extends HTMLElement {
         data: formatted_data,
         radius: graph.radius,
         // Table-Chart
-        title: id,
+        title: interpolate(template_title, {
+          start_date: this.start_date,
+          end_date: this.end_date,
+        }),
         columns: graph.columns,
       };
 
