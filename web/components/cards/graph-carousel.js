@@ -50,7 +50,6 @@ export default class GraphCarousel extends HTMLElement {
     `;
 
     this.innerHTML = `
-      <h1 class="card-header">${title}</h1>
       <div class="card-body">
         <div id="carousel-${id}" class="carousel slide" data-ride="carousel">
           <div id="carousel-inner-${id}" class="carousel-inner">
@@ -86,8 +85,8 @@ export default class GraphCarousel extends HTMLElement {
         const existing_canvas = document.getElementById(el_id);
         if (!existing_canvas) {
           const canvas = document.createElement('canvas');
-          canvas.setAttribute('width', graph.canvas_width);
-          canvas.setAttribute('height', graph.canvas_height);
+          canvas.setAttribute('width', 500);
+          canvas.setAttribute('height', 500);
           canvas.setAttribute('id', el_id);
           graph_el.appendChild(canvas);
         }
