@@ -5,45 +5,23 @@ export default class AppWrapper extends HTMLElement {
     // Shadow dom
     this.attachShadow({ mode: 'open' });
     this.shadowRoot.innerHTML = `
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
       <style>
-        .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-        }
-
-        .header_title {
-          margin: 0;
-        }
-
-        .header_menu {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .header_menu_item {
-          margin-left: 10px;
-        }
-
-        footer {
-          display: flex;
-          width: 100%;
-          justify-content: center;
+        .cursor-pointer {
+          cursor: pointer;
         }
       </style>
-      <div class="header">
-        <div class="header_title" id="home-button">Budget</div>
-        <div class="header_menu">
-          <div class="header_menu_item" id="goals-button">Financial Goals</div>
-          <div class="header_menu_item" id="connect-button">Connect Services</div>
-          <div class="header_menu_item" id="classify-button">Classify</div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div class="d-flex" id="home-button"><h1 class="cursor-pointer">Penny Pincher<h1></div>
+        <div class="d-flex flex-column">
+          <div class="btn-link cursor-pointer" id="goals-button">Financial Goals</div>
+          <div class="btn-link cursor-pointer" id="connect-button">Connect Services</div>
+          <div class="btn-link cursor-pointer" id="classify-button">Classify</div>
           <!-- <div class="header_menu_item" id="upload-button">Upload Transactions</div> -->
         </div>
       </div>
       <slot></slot>
-      <footer id="footer">
+      <footer class="mt-auto w-100 text-center" id="footer">
         &copy; ${new Date().getFullYear()} smokeybear.dev
       </footer>
     `;

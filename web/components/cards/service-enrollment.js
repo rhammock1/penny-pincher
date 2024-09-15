@@ -9,8 +9,8 @@ export default class ServiceEnrollment extends HTMLElement {
     const { title, request } = this.input;
     this.innerHTML = `
       <div class="card">
-        <h1>${title}</h1>
-        <div id="available-services-body">
+        <h1 class="card-header">${title}</h1>
+        <div class="card-body d-flex flex-column" id="available-services-body">
         </div>
       </div>
     `;
@@ -26,7 +26,7 @@ export default class ServiceEnrollment extends HTMLElement {
 
       const service_item = document.createElement('div');
       service_item.id = `${service}-item`;
-      service_item.classList.add('container_body_item');
+      service_item.classList.add('btn', 'btn-primary', 'm-2');
 
       service_item.textContent = `${service}`;
       service_item.addEventListener('click', this.handleServiceClick.bind(this, service));

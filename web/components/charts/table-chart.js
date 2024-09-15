@@ -84,7 +84,7 @@ export default class TableChart extends HTMLElement {
           if (type === 'select') {
             cell = `
               <td>
-                <select id="${cell_id}">
+                <select class="form-control" id="${cell_id}">
                   <option value="">Select</option>
                   ${options.map(option => `<option value="${option}">${option}</option>`).join('')}
                 </select>
@@ -93,7 +93,7 @@ export default class TableChart extends HTMLElement {
           } else if (type === 'text') {
             cell = `
               <td>
-                <input type="text" id="${cell_id}" value="${this.edited_cells[cell_id] || ''}" />
+                <input class="form-control" type="text" id="${cell_id}" value="${this.edited_cells[cell_id] || ''}" />
               </td>
             `;
           }
@@ -122,8 +122,8 @@ export default class TableChart extends HTMLElement {
       const pagination = document.createElement('div');
       pagination.setAttribute('id', `pagination-${id}`);
       pagination.innerHTML = `
-        <button id="prev-page-${id}">Previous</button>
-        <button id="next-page-${id}">Next</button>
+        <button class="btn btn-secondary" id="prev-page-${id}">Previous</button>
+        <button class="btn btn-primary" id="next-page-${id}">Next</button>
       `;
       this.querySelector('#table-body').parentElement.appendChild(pagination);
     }

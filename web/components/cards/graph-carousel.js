@@ -43,17 +43,21 @@ export default class GraphCarousel extends HTMLElement {
     const id = formatTitleAsId(template_title);
 
     const buttons = `
-      <button id="prev-button-${id}">Previous</button>
-      <button id="next-button-${id}">Next</button>
+      <div class="d-flex justify-content-between">
+        <button class="btn btn-primary" id="prev-button-${id}">Previous</button>
+        <button class="btn btn-primary" id="next-button-${id}">Next</button>
+      </div>
     `;
 
     this.innerHTML = `
-      <h1>${title}</h1>
-      <div id="carousel-${id}" class="carousel slide" data-ride="carousel">
-        <div id="carousel-inner-${id}" class="carousel-inner">
-        
+      <h1 class="card-header">${title}</h1>
+      <div class="card-body">
+        <div id="carousel-${id}" class="carousel slide" data-ride="carousel">
+          <div id="carousel-inner-${id}" class="carousel-inner">
+          
+          </div>
+          ${should_show_buttons ? buttons : ''}
         </div>
-        ${should_show_buttons ? buttons : ''}
       </div>
     `;
   }

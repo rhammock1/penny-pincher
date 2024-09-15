@@ -48,8 +48,10 @@ export default class LedgerOverview extends HTMLElement {
 
   setInnerHtml(title, data) {  
     this.innerHTML = `
-      <h1>${title}</h1>
-      ${Object.keys(data).length ? this.createCategoryElement(data, currency).outerHTML : '<no-data></no-data>'}
+      <h3 class="card-header">${title}</h3>
+      <div class="card-body">
+        ${Object.keys(data).length ? this.createCategoryElement(data, currency).outerHTML : '<no-data></no-data>'}
+      </div>
     `;
   }
 

@@ -18,13 +18,24 @@ class BudgetApp {
     const app_body = document.getElementById('app-body');
     // prepend a div to the app-body to hold the date picker
     const date_picker = document.createElement('div');
-    date_picker.classList.add('date-container');
+    date_picker.setAttribute('id', 'date-picker');
+    date_picker.classList.add('d-flex');
     date_picker.innerHTML = `
-      <label for="start_date">Start Date:</label>
-      <input type="date" id="start-date-pick" name="start_date">
-      <label for="end_date">End Date:</label>
-      <input type="date" id="end-date-pick" name="end_date">
-      <button id="date-submit">Submit</button>
+      <div class="d-flex col-12">
+        <div class="d-flex col-8">
+          <div class="form-group col-6">
+            <label for="start_date">Start Date:</label>
+            <input class="form-control" type="date" id="start-date-pick" name="start_date">
+          </div>
+          <div class="form-group col-6">
+            <label for="end_date">End Date:</label>
+            <input class="form-control" type="date" id="end-date-pick" name="end_date">
+          </div>
+        </div>
+        <div class="col-4 d-flex align-items-center">
+          <button class="btn btn-dark" id="date-submit">Submit</button>
+        </div>
+      </div>
     `;
     app_body.prepend(date_picker);
 
@@ -94,7 +105,7 @@ class BudgetApp {
       }
 
       const card_el = document.createElement(card.component);
-      card_el.classList.add('card');
+      card_el.classList.add('card', 'm-1');
       const el_id = `${card.component}-${formatTitleAsId(card.title)}`;
       card_el.input = {
         id: el_id,
@@ -123,12 +134,16 @@ class BudgetApp {
     const dashboard = document.getElementById('dashboard');
     dashboard.innerHTML = '';
 
+    const date_picker = document.getElementById('date-picker');
+
     if(view === 'home') {
-      document.querySelector('.date-container').style.display = 'block';
+      date_picker.classList.remove('d-none')
+      date_picker.classList.add('d-flex');
       this.init();
     } else if(view === 'classify' || view === 'connect' || view === 'goals') {
       // Hide the date picker
-      document.querySelector('.date-container').style.display = 'none';
+      date_picker.classList.remove('d-flex');
+      date_picker.classList.add('d-none');
       const card = this.cards.find(card => card.view === view);
       const card_el = document.createElement(card.component);
       card_el.input = {
