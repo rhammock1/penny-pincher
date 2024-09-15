@@ -100,7 +100,7 @@ export default class FinancialGoals extends HTMLElement {
   handleListGoalsEventListeners(drop = false) {
     const add_goal_btn = document.getElementById('add-goal');
     if(drop) {
-      add_goal_btn.removeEventListener('click', this.bound.openAddGoalForm);
+      add_goal_btn?.removeEventListener?.('click', this.bound.openAddGoalForm);
       return;
     }
     add_goal_btn.addEventListener('click', this.bound.openAddGoalForm);
