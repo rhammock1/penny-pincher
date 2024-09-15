@@ -6,4 +6,5 @@ SELECT x_access_token,
   balance,
   last_updated,
   x_name
-FROM accounts;
+FROM accounts
+WHERE archived IS NULL;
