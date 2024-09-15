@@ -40,7 +40,7 @@ export default [
         canvas_height: 400,
         canvas_width: 700,
         radius: 100,
-        format: data => Object.entries(data).map(([label, { total }]) => ({ label, value: total })),
+        format: data => data,
       },
       // { 
       //   type: 'line', 
@@ -61,9 +61,7 @@ export default [
         canvas_height: 400,
         canvas_width: 700,
         radius: 100,
-        format: data => Object.entries(data)
-          .sort(([a_label], [b_label]) => a_label.localeCompare(b_label))
-          .map(([label, { total }]) => ({ label, value: total })),
+        format: data => data,
       },
       { 
         type: 'line', 
@@ -71,8 +69,7 @@ export default [
         canvas_height: 400,
         canvas_width: 700,
         format: data => Object.entries(data)
-          .sort(([a_label], [b_label]) => a_label.localeCompare(b_label))
-          .map(([label, { total }]) => ({ label, value: total })),
+          .sort(([a_label], [b_label]) => a_label.localeCompare(b_label)),
       },
     ],
     component: 'graph-carousel',

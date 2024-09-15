@@ -9,8 +9,8 @@ export default class ClassifyTransactions extends HTMLElement {
     const {title, request } = this.input;
     this.innerHTML = `
       <div class="card">
-        <h1>${title}</h1>
-        <div id="classify-body">
+        <h1 class="card-header">${title}</h1>
+        <div class="card-body" id="classify-body">
         </div>
       </div>
     `;

@@ -6,7 +6,7 @@ export const getClassifiers = async () => {
 }
 
 export const getClassifierTypes = async () => {
-  const { rows: classifier_types } = await db.file('db/classifiers/get_enum.sql');
+  const { rows: classifier_types } = await db.file('db/get_enum.sql', {enum: 'transaction_type_enum'});
   const types = classifier_types.map(({ classifier_type }) => classifier_type);
   return types;
 }

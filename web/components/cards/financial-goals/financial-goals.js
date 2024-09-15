@@ -39,8 +39,8 @@ export default class FinancialGoals extends HTMLElement {
     const {title, request} = this.input;
     this.innerHTML = `
       <div class="card">
-        <h1>${title}</h1>
-        <div id="financial-goals-body">
+        <h1 class="card-header">${title}</h1>
+        <div class="class-body" id="financial-goals-body">
         </div>
       </div>
     `;
@@ -100,7 +100,7 @@ export default class FinancialGoals extends HTMLElement {
   handleListGoalsEventListeners(drop = false) {
     const add_goal_btn = document.getElementById('add-goal');
     if(drop) {
-      add_goal_btn.removeEventListener('click', this.bound.openAddGoalForm);
+      add_goal_btn?.removeEventListener?.('click', this.bound.openAddGoalForm);
       return;
     }
     add_goal_btn.addEventListener('click', this.bound.openAddGoalForm);
@@ -121,8 +121,10 @@ export default class FinancialGoals extends HTMLElement {
     this.handleAddGoalEventListeners(true);
     
     const goals = document.getElementById('financial-goals-body');
+    goals.classList.add('d-flex', 'flex-column');
     const add_goal_btn = document.createElement('button');
     add_goal_btn.setAttribute('id', 'add-goal');
+    add_goal_btn.classList.add('btn', 'btn-primary', 'm-2');
     add_goal_btn.innerHTML = 'Add Goal';
 
     

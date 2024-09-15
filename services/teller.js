@@ -92,7 +92,7 @@ const format = {
     }, []);
     return formatted;
   },
-  balances: (balances) => balances.map(bal => ({ balance: bal.available, x_account_id: bal.account_id })),
+  balances: (balances) => balances.map(bal => ({ balance: bal.ledger, x_account_id: bal.account_id })),
 };
 
 /**

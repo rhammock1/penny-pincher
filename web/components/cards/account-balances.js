@@ -18,8 +18,10 @@ export default class AccountBalances extends HTMLElement {
 
   updateInnerHTML(title, data) {
     this.innerHTML = `
-      <h1 id=${formatTitleAsId(title)}>${title}</h1>
-      ${data.length ? this.renderAccountBalances(data, currency).outerHTML : '<no-data></no-data>'}
+      <h1 class="card-header" id=${formatTitleAsId(title)}>${title}</h1>
+      <div class="card-body">
+        ${data.length ? this.renderAccountBalances(data, currency).outerHTML : '<no-data></no-data>'}
+      </div>
     `;
   }
 
