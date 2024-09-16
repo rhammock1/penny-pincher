@@ -29,6 +29,8 @@ export default class FinancialGoals extends HTMLElement {
     openAddGoalForm: this.openAddGoalForm.bind(this),
     handleAddGoal: this.handleAddGoal.bind(this),
     handleCancelGoal: this.handleCancelGoal.bind(this),
+    handleGoalAction: this.handleGoalAction.bind(this),
+    handleEditGoal: this.handleEditGoal.bind(this),
   }
 
   constructor() {
@@ -68,19 +70,31 @@ export default class FinancialGoals extends HTMLElement {
     this.handleListGoalsEventListeners(true);
   }
 
-  openAddGoalForm(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
+  openAddGoalForm(update_goal) {
     const goals = document.getElementById('financial-goals-body');
     const form = document.createElement('add-goal-form');
     form.input = {
       request: this.input.request,
       goal_types: this.state.goal_types,
+      existing_goal: update_goal,
     };
     goals.innerHTML = '';
     goals.appendChild(form);
     this.handleAddGoalEventListeners();
+  }
+
+  handleEditGoal(e) {
+    const {goal} = e.detail;
+    console.log('GOAL WAS UPDATED: ', goal);
+  }
+
+  handleGoalAction(e) {
+    const {goal, action} = e.detail;
+    if(action === 'delete') {
+      // confirm the deletion
+    } else {
+      this.openAddGoalForm(goal);
+    }
   }
 
   handleAddGoalEventListeners(drop = false) {
@@ -88,22 +102,25 @@ export default class FinancialGoals extends HTMLElement {
     if(drop) {
       form?.removeEventListener('added-goal', this.bound.handleAddGoal);
       form?.removeEventListener('cancel-add-goal', this.bound.handleCancelGoal);
+      form?.removeEventListener('edited-goal', this.bound.handleEditGoal);
       return;
     }
     // these are custom events emitted from the add-goal-form component
     form?.addEventListener('added-goal', this.bound.handleAddGoal);
-    form?.addEventListener('cancel-add-goal', (e) => {
-      this.bound.handleCancelGoal();
-    });
+    form?.addEventListener('cancel-add-goal', this.bound.handleCancelGoal);
+    form?.addEventListener('edited-goal', this.bound.handleEditGoal)
   }
 
   handleListGoalsEventListeners(drop = false) {
     const add_goal_btn = document.getElementById('add-goal');
+    const goal_list = document.getElementById('goal-list');
     if(drop) {
       add_goal_btn?.removeEventListener?.('click', this.bound.openAddGoalForm);
+      goal_list?.removeEventListener?.('goal-action', this.bound.handleGoalAction);
       return;
     }
     add_goal_btn.addEventListener('click', this.bound.openAddGoalForm);
+    goal_list.addEventListener('goal-action', this.bound.handleGoalAction);
   }
 
   handleAddGoal(e) {
@@ -136,8 +153,10 @@ export default class FinancialGoals extends HTMLElement {
       goals.appendChild(add_goal_btn);
     } else {
       const goal_list = document.createElement('goal-list');
+      goal_list.setAttribute('id', 'goal-list');
       goal_list.input = {
         goals: this.state.goals,
+        goal_types: this.state.goal_types,
       };
       goals.innerHTML = ``;
       goals.appendChild(goal_list);

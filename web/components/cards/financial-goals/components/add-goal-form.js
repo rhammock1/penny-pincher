@@ -1,21 +1,33 @@
 import {fetcher} from '../../../../utils.js';
 
+function formatDateToYYYYMMDD(d) {
+  const date = new Date(d);
+  if(!date) {
+    throw new Error('failed to parse date');
+  }
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 export class AddGoalForm extends HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
-    const {goal_types} = this.input;
+    const {goal_types, existing_goal} = this.input;
+
+    console.log('existing goal: ', existing_goal);
 
     console.log('goal types', goal_types);
     this.innerHTML = `
+      ${existing_goal ? '<h4 class="mt-2 ml-2">Edit Goal</h4>' : ''}
       <form class="m-2" id="add-goal-form">
         <div class="form-group">
           <label for="goal-name">Goal Name</label>
           <input class="form-control" type="text" id="goal-name" name="name" required>
-          <label for="short-name">Short Name</label>
-          <input class="form-control" type="text" id="short-name" name="short_name" required>
         </div>
         <div class="form-group">
           <label for="goal-amount">Goal Amount</label>
@@ -37,6 +49,13 @@ export class AddGoalForm extends HTMLElement {
       </form>
     `;
 
+    if(existing_goal) {
+      document.getElementById('goal-name').value = existing_goal.name;
+      document.getElementById('goal-amount').value = Math.round(existing_goal.goal_amount / 100).toFixed(2);
+      document.getElementById('target-date').value = formatDateToYYYYMMDD(existing_goal.target_date);
+      document.getElementById('goal-type').value = existing_goal.goal_type;
+    }
+
     const form = document.getElementById('add-goal-form');
     form.addEventListener('submit', this.handleSubmit.bind(this));
 
@@ -57,21 +76,21 @@ export class AddGoalForm extends HTMLElement {
     const goal_name = document.getElementById('goal-name').value;
     const goal_amount = document.getElementById('goal-amount').value;
     const goal_date = document.getElementById('target-date').value;
-    const short_name = document.getElementById('short-name').value;
     const goal_type = document.getElementById('goal-type').value;
 
     const goal = {
       goal_name,
       goal_amount,
       goal_date,
-      short_name,
       goal_type,
     };
 
-    const response = await fetcher(this.input.request, 'POST', goal);
+    const endpoint = `${this.input.request}${this.input.existing_goal ? `/${this.input.existing_goal.goal_id}` : ''}`;
+    const response = await fetcher(endpoint, this.input.existing_goal ? 'PATCH' : 'POST', {goal: {...goal, goal_id: this.input.existing_goal?.goal_id}});
 
     if(response.ok) {
-      this.dispatchEvent(new CustomEvent('added-goal', {detail: goal}));
+      const event = this.input.existing_goal ? 'edited-goal' : 'added-goal'
+      this.dispatchEvent(new CustomEvent(event, {detail: {goal: {...goal, goal_id: this.input.existing_goal?.goal_id}}}));
     }
   }
 }

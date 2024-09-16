@@ -1,5 +1,5 @@
 import express from 'express';
-import { getGoals, getGoalTypes } from '../actions/goals.js';
+import { getGoals, getGoalTypes, updateGoal } from '../actions/goals.js';
 
 const router = express.Router();
 
@@ -10,6 +10,16 @@ router.get('/', async (req, res) => {
     res.status(200).json({ data: {goals, goal_types} });
   } catch (e) {
     console.error('Failed to GET /goals', e);
+    res.status(500).json({ error: e.message });
+  }
+});
+
+router.patch('/:goal_id', async (req, res) => {
+  const {body: {goal: {goal_id, ...goal}}} = req;
+  try {
+    await updateGoal(goal_id, goal);
+  } catch(e) {
+    console.error('Failed to update goal', e);
     res.status(500).json({ error: e.message });
   }
 });

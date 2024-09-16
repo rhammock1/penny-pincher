@@ -1,25 +1,43 @@
 import { currency, fetcher } from "../../../../utils.js";
 
 export default class GoalList extends HTMLElement {
+  goals = [];
+
   constructor() {
     super();
   }
 
   connectedCallback() {
     const {goals} = this.input;
+    this.goals = goals;
 
-    this.updateInnerHTML(goals);
+    this.showGoalList(goals);
   }
 
-  handleEditGoal(goal_id) {
-    console.log('EDIT GOAL UNIMPLEMENTED ', goal_id);
-  }
-  
-  handleDeleteGoal(goal_id) {
-    console.log('DELETE GOAL UNIMPLEMENTED ', goal_id);
+  diconnectedCallback() {
+    delete window.handleGoalAction;
   }
 
-  updateInnerHTML(goals) {
+  showEditGoalForm(goal) {
+    const addGoalForm = document.createElement('add-goal-form');
+    addGoalForm.input = {
+      goal_types: this.input.goal_types,
+      existing_goal: goal,
+    };
+    this.innerHTML = `
+      <h4 class="mt-2 ml-2">Edit Goal</h4>
+    `;
+    this.appendChild(addGoalForm);
+  }
+
+  handleGoalAction(type, goal_id) {
+    const goal = this.input.goals.find(goal => goal.goal_id.toString() === goal_id.toString());
+    console.log('SELECTED GOAL: ', goal);
+
+    this.dispatchEvent(new CustomEvent('goal-action', {detail: {goal, action: type}}));
+  }
+
+  showGoalList(goals) {
     console.log('goals', goals);
     this.innerHTML = `
       <ul class="list-group">
@@ -36,8 +54,8 @@ export default class GoalList extends HTMLElement {
                 <small class="t-muted">${target_date ? `Save by date: ${new Date(target_date).toDateString()}` : ''}</small>
               </div>
               <div class="btn-group">
-                <button onclick="handleEditGoal(${goal_id})" class="btn btn-secondary">Edit</button>
-                <button onclick="handleDeleteGoal(${goal_id})" class="btn btn-danger">Delete</button>
+                <button onclick="handleGoalAction('edit', ${goal_id})" class="btn btn-secondary">Edit</button>
+                <button onclick="handleGoalAction('delete', ${goal_id})" class="btn btn-danger">Delete</button>
               </div>
             </li>
           `;
@@ -46,8 +64,7 @@ export default class GoalList extends HTMLElement {
     `;
 
     // Gross
-    window.handleEditGoal = this.handleEditGoal;
-    window.handleDeleteGoal = this.handleDeleteGoal;
+    window.handleGoalAction = this.handleGoalAction.bind(this);
   }
 }
 
