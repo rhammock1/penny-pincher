@@ -71,7 +71,7 @@ export default class FinancialGoals extends HTMLElement {
     this.handleListGoalsEventListeners(true);
   }
 
-  openAddGoalForm(update_goal) {
+  openAddGoalForm(e, update_goal) {
     const goals = document.getElementById('financial-goals-body');
     const form = document.createElement('add-goal-form');
     form.input = {
@@ -112,7 +112,7 @@ export default class FinancialGoals extends HTMLElement {
       }
       this.handleDeleteGoal(goal.goal_id);
     } else {
-      this.openAddGoalForm(goal);
+      this.openAddGoalForm(e, goal);
     }
   }
 

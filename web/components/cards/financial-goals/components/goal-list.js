@@ -43,7 +43,7 @@ export default class GoalList extends HTMLElement {
         ${goals.map((goal) => {
           const {goal_name, goal_amount, target_date, goal_type, goal_id} = goal;
           return `
-            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom d-flex flex-column align-items-between">
+            <li class="list-group-item border-top-0 border-left-0 rounded-0 border-right-0 border-bottom d-flex flex-column align-items-between">
               <div class="d-flex flex-column justify-content-center align-items-start">
                 <div class="d-flex align-items-center">
                   ${goal_name}

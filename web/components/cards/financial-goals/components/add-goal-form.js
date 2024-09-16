@@ -25,27 +25,29 @@ export class AddGoalForm extends HTMLElement {
     this.innerHTML = `
       ${existing_goal ? '<h4 class="mt-2 ml-2">Edit Goal</h4>' : ''}
       <form class="m-2" id="add-goal-form">
-        <div class="form-group">
+        <div class="form-group mb-2">
           <label for="goal-name">Goal Name</label>
           <input class="form-control" type="text" id="goal-name" name="goal_name" required>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-2">
           <label for="goal-amount">Goal Amount</label>
           <input class="form-control" type="number" id="goal-amount" name="goal_amount" required>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-2">
           <label for="target-date">Goal Date</label>
           <input class="form-control" type="date" id="target-date" name="target_date">
         </div>
-        <div class="form-group">
+        <div class="form-group mb-2">
           <label for="goal-type">Goal Type</label>
           <select class="form-control" id="goal-type" name="goal_type">
             <option value="">Select a goal type</option>
             ${goal_types?.map(({classifier_type: type}) => `<option value="${type}">${type}</option>`).join('')}
           </select>
         </div>
-        <button class="btn btn-secondary" id="cancel-add-goal" type="button">Cancel</button>
-        <button class="btn btn-primary" id="submit-add-goal" type="submit">Submit</button>
+        <div class="d-flex justify-content-between">
+          <button class="btn btn-secondary" id="cancel-add-goal" type="button">Cancel</button>
+          <button class="btn btn-primary" id="submit-add-goal" type="submit">Submit</button>
+        </div>
       </form>
     `;
 
