@@ -14,4 +14,5 @@ import "./cards/classify-transactions.js";
 import "./cards/service-enrollment.js";
 import "./cards/financial-goals/financial-goals.js";
 import "./cards/financial-goals/components/goal-list.js";
+import "./confirmation.js";
 import "./no-data.js";

@@ -1,4 +1,5 @@
 import { fetcher } from "../../../utils.js";
+import {confirm} from '../../confirmation.js';
 
 // Components
 import './components/goal-list.js';
@@ -90,10 +91,26 @@ export default class FinancialGoals extends HTMLElement {
     this.handleView('list');
   }
 
-  handleGoalAction(e) {
+  async handleDeleteGoal(goal_id) {
+    const response = await fetcher(`/goals/${goal_id}`, 'DELETE');
+    if(!response.ok) {
+      console.error('Failed to delete the goal');
+      return;
+    }
+
+    this.state.goals = this.state.goals.filter(g => g.goal_id.toString() !== goal_id.toString());
+    this.handleView('list');
+  }
+
+  async handleGoalAction(e) {
     const {goal, action} = e.detail;
     if(action === 'delete') {
       // confirm the deletion
+      const confirmed = await confirm({description: `You're about to delete the ${goal.goal_name} goal.`});
+      if(!confirmed) {
+        return;
+      }
+      this.handleDeleteGoal(goal.goal_id);
     } else {
       this.openAddGoalForm(goal);
     }
