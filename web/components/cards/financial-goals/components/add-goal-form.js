@@ -27,7 +27,7 @@ export class AddGoalForm extends HTMLElement {
       <form class="m-2" id="add-goal-form">
         <div class="form-group">
           <label for="goal-name">Goal Name</label>
-          <input class="form-control" type="text" id="goal-name" name="name" required>
+          <input class="form-control" type="text" id="goal-name" name="goal_name" required>
         </div>
         <div class="form-group">
           <label for="goal-amount">Goal Amount</label>
@@ -50,7 +50,7 @@ export class AddGoalForm extends HTMLElement {
     `;
 
     if(existing_goal) {
-      document.getElementById('goal-name').value = existing_goal.name;
+      document.getElementById('goal-name').value = existing_goal.goal_name;
       document.getElementById('goal-amount').value = Math.round(existing_goal.goal_amount / 100).toFixed(2);
       document.getElementById('target-date').value = formatDateToYYYYMMDD(existing_goal.target_date);
       document.getElementById('goal-type').value = existing_goal.goal_type;
@@ -74,7 +74,7 @@ export class AddGoalForm extends HTMLElement {
     e.stopPropagation();
 
     const goal_name = document.getElementById('goal-name').value;
-    const goal_amount = document.getElementById('goal-amount').value;
+    const goal_amount = Number(document.getElementById('goal-amount').value) * 100;
     const goal_date = document.getElementById('target-date').value;
     const goal_type = document.getElementById('goal-type').value;
 
@@ -86,7 +86,7 @@ export class AddGoalForm extends HTMLElement {
     };
 
     const endpoint = `${this.input.request}${this.input.existing_goal ? `/${this.input.existing_goal.goal_id}` : ''}`;
-    const response = await fetcher(endpoint, this.input.existing_goal ? 'PATCH' : 'POST', {goal: {...goal, goal_id: this.input.existing_goal?.goal_id}});
+    const response = await fetcher(endpoint, this.input.existing_goal ? 'PATCH' : 'POST', {goal});
 
     if(response.ok) {
       const event = this.input.existing_goal ? 'edited-goal' : 'added-goal'

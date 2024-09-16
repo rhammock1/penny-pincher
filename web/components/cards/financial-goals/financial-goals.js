@@ -86,6 +86,8 @@ export default class FinancialGoals extends HTMLElement {
   handleEditGoal(e) {
     const {goal} = e.detail;
     console.log('GOAL WAS UPDATED: ', goal);
+    this.state.goals = this.state.goals.map(g => g.goal_id.toString() === goal.goal_id.toString() ? goal : g);
+    this.handleView('list');
   }
 
   handleGoalAction(e) {

@@ -11,6 +11,6 @@ export const getGoalTypes = async () => {
 };
 
 export const updateGoal = async (goal_id, goal) => {
-  console.log('UPDATING GOAL: ', goal_id, goal);
+  await db.file('db/goals/patch.sql', {goal_id, ...goal});
   return;
 }

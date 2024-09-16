@@ -15,9 +15,10 @@ router.get('/', async (req, res) => {
 });
 
 router.patch('/:goal_id', async (req, res) => {
-  const {body: {goal: {goal_id, ...goal}}} = req;
+  const {body: {goal}, params: {goal_id}} = req;
   try {
     await updateGoal(goal_id, goal);
+    res.status(200).json();
   } catch(e) {
     console.error('Failed to update goal', e);
     res.status(500).json({ error: e.message });
