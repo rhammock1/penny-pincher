@@ -1,5 +1,5 @@
 SELECT goal_id,
-  name,
+  goal_name,
   goal_amount,
   goal_type,
   target_date,

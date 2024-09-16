@@ -42,12 +42,12 @@ export default class GoalList extends HTMLElement {
     this.innerHTML = `
       <ul class="list-group">
         ${goals.map((goal) => {
-          const {name, goal_amount, target_date, goal_type, goal_id} = goal;
+          const {goal_name, goal_amount, target_date, goal_type, goal_id} = goal;
           return `
             <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom d-flex flex-column align-items-between">
               <div class="d-flex flex-column justify-content-center align-items-start">
                 <div class="d-flex align-items-center">
-                  ${name}
+                  ${goal_name}
                   <span class="badge m-1 badge-primary badge-pill">${currency.format(goal_amount / 100)}</span>
                 </div>
                 <small class="t-muted">Goal type: ${goal_type}</small>
