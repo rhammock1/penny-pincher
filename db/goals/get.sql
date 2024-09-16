@@ -5,4 +5,5 @@ SELECT goal_id,
   target_date,
   created,
   classifier_ids
-FROM goals;
+FROM goals
+WHERE archived IS NULL;
