@@ -32,7 +32,6 @@ export default class GoalList extends HTMLElement {
 
   handleGoalAction(type, goal_id) {
     const goal = this.input.goals.find(goal => goal.goal_id.toString() === goal_id.toString());
-    console.log('SELECTED GOAL: ', goal);
 
     this.dispatchEvent(new CustomEvent('goal-action', {detail: {goal, action: type}}));
   }
