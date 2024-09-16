@@ -131,7 +131,7 @@ export default class GraphCarousel extends HTMLElement {
     this.start_date = this.getAttribute('data-start-date');
     this.end_date = this.getAttribute('data-end-date');
     
-    this.updateInnerHtml(title, template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
+    this.updateInnerHtml(template_title, graphs.length > 1 && graphs.filter(graph => graph.visible).length > 1);
     fetcher(interpolate(request, { start_date: this.start_date, end_date: this.end_date }))
       .then(res => res.json())
       .then(({ data }) => {

@@ -1,8 +1,9 @@
 SELECT goal_id,
-  name,
+  goal_name,
   goal_amount,
   goal_type,
   target_date,
   created,
   classifier_ids
-FROM goals;
+FROM goals
+WHERE archived IS NULL;

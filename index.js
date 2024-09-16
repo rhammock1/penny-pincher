@@ -12,7 +12,14 @@ app.use('/', api);
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 app.use(express.static(path.join(__dirname, 'web'), { extensions: ['html', 'htm'], index: 'index.html' }));
 
+let sigintHandled = false;
 process.on('SIGINT', async () => {
+  console.warn('Terminate process signal received.');
+  if(sigintHandled) {
+    console.warn('SIGINT received again. ignoring');
+    return;
+  }
+  sigintHandled = true;
   try {
     await db.end();
   } catch(e) {

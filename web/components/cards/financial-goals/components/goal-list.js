@@ -1,43 +1,60 @@
 import { currency, fetcher } from "../../../../utils.js";
 
 export default class GoalList extends HTMLElement {
+  goals = [];
+
   constructor() {
     super();
   }
 
   connectedCallback() {
     const {goals} = this.input;
+    this.goals = goals;
 
-    this.updateInnerHTML(goals);
+    this.showGoalList(goals);
   }
 
-  handleEditGoal(goal_id) {
-    console.log('EDIT GOAL UNIMPLEMENTED ', goal_id);
-  }
-  
-  handleDeleteGoal(goal_id) {
-    console.log('DELETE GOAL UNIMPLEMENTED ', goal_id);
+  diconnectedCallback() {
+    delete window.handleGoalAction;
   }
 
-  updateInnerHTML(goals) {
+  showEditGoalForm(goal) {
+    const addGoalForm = document.createElement('add-goal-form');
+    addGoalForm.input = {
+      goal_types: this.input.goal_types,
+      existing_goal: goal,
+    };
+    this.innerHTML = `
+      <h4 class="mt-2 ml-2">Edit Goal</h4>
+    `;
+    this.appendChild(addGoalForm);
+  }
+
+  handleGoalAction(type, goal_id) {
+    const goal = this.input.goals.find(goal => goal.goal_id.toString() === goal_id.toString());
+
+    this.dispatchEvent(new CustomEvent('goal-action', {detail: {goal, action: type}}));
+  }
+
+  showGoalList(goals) {
     console.log('goals', goals);
     this.innerHTML = `
       <ul class="list-group">
         ${goals.map((goal) => {
-          const {name, goal_amount, target_date, goal_type, goal_id} = goal;
+          const {goal_name, goal_amount, target_date, goal_type, goal_id} = goal;
           return `
-            <li class="list-group-item border-top-0 border-left-0 border-right-0 border-bottom d-flex flex-column align-items-between">
+            <li class="list-group-item border-top-0 border-left-0 rounded-0 border-right-0 border-bottom d-flex flex-column align-items-between">
               <div class="d-flex flex-column justify-content-center align-items-start">
                 <div class="d-flex align-items-center">
-                  ${name}
+                  ${goal_name}
                   <span class="badge m-1 badge-primary badge-pill">${currency.format(goal_amount / 100)}</span>
                 </div>
                 <small class="t-muted">Goal type: ${goal_type}</small>
                 <small class="t-muted">${target_date ? `Save by date: ${new Date(target_date).toDateString()}` : ''}</small>
               </div>
               <div class="btn-group">
-                <button onclick="handleEditGoal(${goal_id})" class="btn btn-secondary">Edit</button>
-                <button onclick="handleDeleteGoal(${goal_id})" class="btn btn-danger">Delete</button>
+                <button onclick="handleGoalAction('edit', ${goal_id})" class="btn btn-secondary">Edit</button>
+                <button onclick="handleGoalAction('delete', ${goal_id})" class="btn btn-danger">Delete</button>
               </div>
             </li>
           `;
@@ -46,8 +63,7 @@ export default class GoalList extends HTMLElement {
     `;
 
     // Gross
-    window.handleEditGoal = this.handleEditGoal;
-    window.handleDeleteGoal = this.handleDeleteGoal;
+    window.handleGoalAction = this.handleGoalAction.bind(this);
   }
 }
 
